@@ -1,0 +1,6 @@
+# api
+flask==1.0.2
+
+psycopg2==2.7.1 
+Flask-SQLAlchemy==2.1 
+Flask-Migrate==1.8.0

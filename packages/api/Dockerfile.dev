@@ -1,0 +1,15 @@
+
+FROM python:3.6.4
+
+# Create the user that will run the app
+WORKDIR /app
+
+ENV FLASK_APP run.py
+
+COPY ./requirements.txt ./
+
+# Install requirements, including from Gemfury
+RUN pip install --upgrade pip
+RUN pip install -r ./requirements.txt
+
+CMD ["python", "run.py"]
