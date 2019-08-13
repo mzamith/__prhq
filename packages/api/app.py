@@ -1,12 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api
+from flask_jwt_extended import JWTManager
 
 from api.config import get_logger
-
 
 _logger = get_logger(logger_name=__name__)
 db = SQLAlchemy()
 
+from api.resources.auth import *
 
 def create_app(*, config_object) -> Flask:
     """Create a flask app instance."""
@@ -14,10 +16,11 @@ def create_app(*, config_object) -> Flask:
     flask_app = Flask('prhq_api')
     flask_app.config.from_object(config_object)
     db.init_app(flask_app)
+    jwt = JWTManager(flask_app)
 
     # import blueprints
-    from api.controller import prediction_app
-    flask_app.register_blueprint(prediction_app)
+    # from api.controller import prhq_app
+    # flask_app.register_blueprint(prhq_app)
     _logger.debug('Application instance created')
     
     import api.models
@@ -26,4 +29,19 @@ def create_app(*, config_object) -> Flask:
 
         db.create_all()
 
+    configure_resources(flask_app)
+
     return flask_app
+
+
+def configure_resources(app):
+
+    rest_api = Api(app)
+
+    rest_api.add_resource(UserRegistration, '/registration')
+    rest_api.add_resource(UserLogin, '/login')
+    rest_api.add_resource(UserLogoutAccess, '/logout/access')
+    rest_api.add_resource(UserLogoutRefresh, '/logout/refresh')
+    rest_api.add_resource(TokenRefresh, '/token/refresh')
+    rest_api.add_resource(AllUsers, '/users')
+    rest_api.add_resource(SecretResource, '/secret')

@@ -11,22 +11,6 @@ class Auditable(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_by = db.Column(db.String(64))
 
-class User(Auditable):
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    affiliate_id = db.Column(db.Integer, db.ForeignKey('affiliate.id'))
-    affiliate = relationship("Affiliate")
-    password_hash = db.Column(db.String(128))
-
-    def __init__(self, name):
-        self.username = name
-
-    def __repr__(self):
-        return '<id {}>'.format(self.id)
-
 class Affiliate(Auditable):
     __tablename__ = 'affiliate'
 
@@ -36,6 +20,19 @@ class Affiliate(Auditable):
 
     def __init__(self, name):
         self.name = name
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+class User(Auditable):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), unique=True)
+    affiliate_id = db.Column(db.Integer, db.ForeignKey(Affiliate.id))
+    affiliate = relationship('Affiliate')
+    password_hash = db.Column(db.String(128))
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -95,11 +92,11 @@ class Lift(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     workout_type_id = db.Column(db.Integer, db.ForeignKey('workout_types.id'))
-    workout_type = relationship("WorkoutTypes")
+    workout_type = relationship('WorkoutTypes')
     score_type_id = db.Column(db.Integer, db.ForeignKey('score_types.id'))
-    score_type = relationship("ScoreTypes")
-    movements = relationship("Movement", secondary=lift_association_table)
-    lift_records = relationship("LiftRecord", back_populates="lift")
+    score_type = relationship('ScoreTypes')
+    movements = relationship('Movement', secondary=lift_association_table)
+    lift_records = relationship('LiftRecord', back_populates='lift')
 
 class Benchmark(db.Model):
 
@@ -107,10 +104,10 @@ class Benchmark(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     workout_type_id = db.Column(db.Integer, db.ForeignKey('workout_types.id'))
-    workout_type = relationship("WorkoutTypes")
+    workout_type = relationship('WorkoutTypes')
     score_type_id = db.Column(db.Integer, db.ForeignKey('score_types.id'))
-    score_type = relationship("ScoreTypes")
-    movements = relationship("Movement", secondary=benchmark_association_table)
+    score_type = relationship('ScoreTypes')
+    movements = relationship('Movement', secondary=benchmark_association_table)
 
 class CustomWorkout(db.Model):
 
@@ -118,21 +115,21 @@ class CustomWorkout(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     workout_type_id = db.Column(db.Integer, db.ForeignKey('workout_types.id'))
-    workout_type = relationship("WorkoutTypes")
+    workout_type = relationship('WorkoutTypes')
     score_type_id = db.Column(db.Integer, db.ForeignKey('score_types.id'))
-    score_type = relationship("ScoreTypes")
-    movements = relationship("Movement", secondary=custom_wod_association_table)
+    score_type = relationship('ScoreTypes')
+    movements = relationship('Movement', secondary=custom_wod_association_table)
 
 class LiftRecord(Auditable):
 
     __tablename__ = 'lift_record'
     id = db.Column(db.Integer, primary_key=True)
     lift_id = db.Column(db.Integer, db.ForeignKey('lift.id'))
-    lift = relationship("Lift", back_populates="lift_records")
+    lift = relationship('Lift', back_populates='lift_records')
     number_of_sets = db.Column(db.Integer)
     reps_per_set = db.Column(db.Integer)
     date = db.Column(db.DateTime, default = datetime.datetime.utcnow)
-    sets = relationship("SetRecord")
+    sets = relationship('SetRecord')
 
 class SetRecord(Auditable):
 

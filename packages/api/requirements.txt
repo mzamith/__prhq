@@ -4,3 +4,6 @@ flask==1.0.2
 psycopg2==2.7.1 
 Flask-SQLAlchemy==2.1 
 Flask-Migrate==1.8.0
+Flask-Restful==0.3.7
+Flask-jwt-extended==3.21.0
+passlib==1.7.1
