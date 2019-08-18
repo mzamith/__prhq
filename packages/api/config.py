@@ -15,6 +15,8 @@ LOG_FILE = LOG_DIR / 'ml_api.log'
 UPLOAD_FOLDER = PACKAGE_ROOT / 'uploads'
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 
+INITIAL_DATA = PACKAGE_ROOT / 'api/initial_data'
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 
