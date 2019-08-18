@@ -49,7 +49,7 @@ class User(Auditable):
 
     def __repr__(self):
         return '<username {}>'.format(self.username)
-
+q
 
 class WorkoutTypeEnum(enum.Enum):
     notable = 'NTB'
